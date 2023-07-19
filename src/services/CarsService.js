@@ -12,6 +12,7 @@ class CarsService {
 
     const cars = res.data.map(carPojo => new Car(carPojo))
 
+    // NOTE we can do this if we wanted to reverse the order of our cars array
     // AppState.cars = cars.reverse()
     AppState.cars = cars
   }
@@ -23,7 +24,9 @@ class CarsService {
 
     const car = new Car(res.data)
 
+    // NOTE will insert a value in at the beginning of an array
     // AppState.cars.unshift(car)
+
     AppState.cars.push(car)
   }
 

@@ -1,3 +1,5 @@
+<!-- NOTE refactored this into a reuseable modal component, and a seperate carForm component -->
+
 <template>
   <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

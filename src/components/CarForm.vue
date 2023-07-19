@@ -35,8 +35,11 @@
     </div>
     <div class="mb-3">
       <label for="engineType">Engine Type</label>
-      <select v-model="editable.engineType" class="form-select" aria-label="Default select example" id="engineType">
-        <option v-for="(engineType, index) in engineTypes" :key="engineType + index" :value="engineType">
+      <select required v-model="editable.engineType" class="form-select" aria-label="Default select example"
+        id="engineType">
+        <!-- NOTE we v-for over an array in our return here to save time -->
+        <!-- NOTE if all of our values in the array are single data-types and unique, we can use that for our key -->
+        <option v-for="engineType in engineTypes" :key="engineType" :value="engineType">
           {{ engineType }}
         </option>
       </select>
@@ -58,16 +61,19 @@ export default {
     const editable = ref({})
 
     function setFormDefaults() {
-      editable.value.engineType = 'unknown'
+      editable.value.engineType = ''
       editable.value.color = '#7ed957'
     }
 
     onMounted(() => {
+      // NOTE used to set up our defaults when this component is mounted
       setFormDefaults()
     })
 
+    // NOTE  this watchEffect will run whenver a reactive property referenced inside of the
     watchEffect(() => {
       if (AppState.activeCar) {
+        // NOTE breaks reference to the original object in our AppState so the we don't edit that one before our network request fires off
         const carWithBrokenReference = { ...AppState.activeCar }
         editable.value = carWithBrokenReference
       }
@@ -75,6 +81,8 @@ export default {
 
     return {
       editable,
+
+      // NOTE we use this in our v-for to autogenerate options
       engineTypes: [
         "unknown",
         "2 stroke",
@@ -89,8 +97,10 @@ export default {
         "chuncko"
       ],
 
+      // NOTE we use this to determine if our car has an id, which means we are updating it
       handleSubmit() {
         if (editable.value.id) {
+          // NOTE we use the "this" keyword to refer to other properties inside of the return object
           this.editCar()
         }
         else {
@@ -105,9 +115,12 @@ export default {
 
           await carsService.createCar(carData)
 
+          // NOTE clears our form
           editable.value = {}
+          // NOTE sets up default values on our form
           setFormDefaults()
 
+          // NOTE hides our Modal
           Modal.getOrCreateInstance('#formModal').hide()
         } catch (error) {
           Pop.error(error)
