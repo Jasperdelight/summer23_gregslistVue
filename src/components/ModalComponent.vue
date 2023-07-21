@@ -4,11 +4,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">
+            <!-- NOTE allows users to slot in different HTML/text content/Components when bringing this Component in to another Component -->
             <slot name="header"></slot>
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <!-- NOTE allows users to slot in different HTML/text content/Components when rendering this Component -->
           <!-- <CarForm /> -->
           <slot name="body"></slot>
         </div>
@@ -23,6 +25,7 @@
 export default {
 
   setup() {
+
     return {};
   },
 }

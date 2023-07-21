@@ -3,6 +3,7 @@
     <div class="row mb-3">
       <div class="col-12">
         <h1>Cars</h1>
+        <!-- NOTE the v-if here will evalute if the account object has an id or is undefined and render based on those truthy falsy values -->
         <button @click="clearActiveCar()" v-if="account.id" class="btn btn-secondary fs-4" data-bs-toggle="modal"
           data-bs-target="#formModal">
           Create Car Listing
@@ -11,12 +12,14 @@
     </div>
     <div class="row">
       <div v-for="car in cars" :key="car.id" class="col-md-10 m-auto mb-3">
+        <!-- STUB abstracted out to our CarCard -->
         <!-- <div class="bg-white border border-dark rounded d-flex">
           <img class="img-fluid" :src="car.imgUrl" :alt="car.make + ' ' + car.model">
           <div>
             <h2>{{ car.year }} {{ car.make }} {{ car.model }}</h2>
           </div>
         </div> -->
+
         <CarCard :carProp="car" />
       </div>
     </div>
@@ -24,14 +27,20 @@
 
   <!-- <CarFormModal /> -->
 
+  <!-- NOTE we can give our components an beginning tag and an ending tag so that we can optionally slot other components or HTML inside -->
   <ModalComponent>
     <!-- <h1>Slots are cool</h1> -->
+
+    <!-- NOTE this works in tandem with slot set up inside of the ModalComponent. the #header inside of our template tag denotes to insert this HTML into the slot inside of ModalComponent with the corresponding name -->
     <template #header>
       <span> It's the Car form, baby</span>
     </template>
+
+    <!-- NOTE inserts the entire CarForm into the slot on the ModalComponent with the name of body-->
     <template #body>
       <CarForm />
     </template>
+
   </ModalComponent>
 </template>
 
@@ -41,13 +50,13 @@ import CarCard from '../components/CarCard.vue';
 import ModalComponent from '../components/ModalComponent.vue';
 import CarForm from '../components/CarForm.vue';
 import { computed, onMounted } from 'vue';
-import { logger } from '../utils/Logger.js';
 import Pop from '../utils/Pop.js';
 import { carsService } from '../services/CarsService.js'
 import { AppState } from '../AppState.js';
 
 export default {
   setup() {
+
     async function getCars() {
       try {
         await carsService.getCars();
@@ -56,15 +65,20 @@ export default {
         Pop.error(error);
       }
     }
+
     onMounted(() => {
       // logger.log('CARS PAGE MOUNTED')
       getCars();
     });
+
     return {
       cars: computed(() => AppState.cars),
+
+      // NOTE brings in the info about the current user of our website. Will be an empty object {} if they are not logged in, otherwise will have their credentials from our API
       account: computed(() => AppState.account),
 
       clearActiveCar() {
+        // NOTE we do this so that the logic around the handleSubmit in our carForm works correctly
         const dummyCar = { engineType: 'unknown', color: '#7ed957' }
         carsService.setCarToEdit(dummyCar)
       }

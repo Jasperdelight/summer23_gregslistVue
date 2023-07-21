@@ -6,9 +6,19 @@
         <h2>{{ carProp.year }} {{ carProp.make }} {{ carProp.model }}</h2>
         <p>{{ carProp.description }}</p>
         <h3>Listed by: {{ carProp.creator.name }} on {{ carProp.createdAt.toLocaleDateString() }}</h3>
+
+        <!-- NOTE creator is a nested object on our car object, so we have to drill in one more layer deep to access these properties -->
         <img class="creator-picture" :src="carProp.creator.picture" :alt="carProp.creator.name">
       </div>
+
+      <!-- NOTE checks to see wether the current logged in user is the one who created this car -->
       <div v-if="account.id == carProp.creatorId">
+
+        <!-- NOTE this would work by passing down the id as an argument to our removeCar method, but we handle it by referencing the props directly in the return object -->
+        <!-- <button @click="removeCar(carProp.id)" class="btn btn-danger" title="Delete this car" type="button">
+          <i class="mdi mdi-delete"></i>
+        </button> -->
+
 
         <button @click="removeCar()" class="btn btn-danger" title="Delete this car" type="button">
           <i class="mdi mdi-delete"></i>
@@ -18,6 +28,7 @@
           data-bs-target="#formModal">
           <i class="mdi mdi-pencil"></i>
         </button>
+
       </div>
     </div>
   </div>
@@ -36,8 +47,10 @@ export default {
   props: {
     carProp: { type: Car, required: true }
   },
+  // NOTE if we want access to the data stored within our props object in setup, you must pass it down as an argument
   setup(props) {
     return {
+
       account: computed(() => AppState.account),
 
 
@@ -80,5 +93,8 @@ export default {
   height: 10vh;
   width: 10vh;
   border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+
 }
 </style>
